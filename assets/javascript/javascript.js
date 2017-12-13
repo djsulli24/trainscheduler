@@ -19,19 +19,35 @@ var trainSchedule = {
     currentTrains: [],
     initializeApp: function() {
         database.ref('trains').once('value').then(function(snapshot){
-
             if (snapshot.val() === null) {
                 database.ref().set({trains: "[]"});
             }
             else {
-                trains.currentTrains = JSON.parse(snapshot.val());;
+                trainSchedule.currentTrains = JSON.parse(snapshot.val());
             }
         });
+        this.writeAllRows();
     },
     addTrain: function() {
-
+        // Adds a single train to the currentTrains Array, writes the new array to the db,
+        // and adds a row in the table with this new train's info
     },
-
+    // Writes a table row for each train in the currentTrains array
+    writeAllRows: function() {
+        if (this.currentTrains.length > 0) {
+            this.currentTrains.map(function(value) {
+                $("#trainsTable").append(`
+                    <tr>
+                        <td>` + value.name + `</td>
+                        <td>` + value.destination  + `</td>
+                        <td>` + value.firstTrainTime + `</td>
+                        <td>` + value.frequency + `</td>
+                        <td>Some value</td>
+                    </tr>
+                `);
+            });
+        }
+    },
 };
 
 //------------EVENT LISTENERS------------
