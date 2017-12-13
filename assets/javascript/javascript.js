@@ -18,19 +18,46 @@ var database = firebase.database()
 var trainSchedule = {
     currentTrains: [],
     initializeApp: function() {
+        console.log(database.ref('trains'));
         database.ref('trains').once('value').then(function(snapshot){
+            console.log(snapshot.val());
             if (snapshot.val() === null) {
                 database.ref().set({trains: "[]"});
             }
             else {
                 trainSchedule.currentTrains = JSON.parse(snapshot.val());
+                trainSchedule.writeAllRows();
             }
         });
-        this.writeAllRows();
+        
     },
+    // Adds a single train to the currentTrains Array, writes the new array to the db,
+    // and adds a row in the table with this new train's info
     addTrain: function() {
-        // Adds a single train to the currentTrains Array, writes the new array to the db,
-        // and adds a row in the table with this new train's info
+        this.currentTrains.push(
+            {
+                'name': $("#trainName").val(),
+                destination: $("#destination").val(),
+                firstTrainTime: $("#firstTrainTime").val(),
+                frequency: $("#frequency").val()
+            }
+        );
+        database.ref().set({
+            trains: JSON.stringify(this.currentTrains)
+        });
+        this.addRow(this.currentTrains[this.currentTrains.length - 1])
+    },
+    // Adds a row to the table for the newly added train
+    addRow: function(trainObject) {
+        $("#trainsTable").append(`
+        <tr>
+            <td>` + trainObject.name + `</td>
+            <td>` + trainObject.destination  + `</td>
+            <td>` + trainObject.firstTrainTime + `</td>
+            <td>` + trainObject.frequency + `</td>
+            <td>Some value</td>
+        </tr>
+    `);
     },
     // Writes a table row for each train in the currentTrains array
     writeAllRows: function() {
@@ -54,10 +81,7 @@ var trainSchedule = {
 
 $("#submitButton").click(function() {
     event.preventDefault();
-    // database.ref().set({"time": moment().format("LLLL")});
-    database.ref('time').once('value').then(function(snapshot){
-        console.log(snapshot.val());
-    });
+    trainSchedule.addTrain();
 });
 
 //-------------ONLOAD FUNCTIONS-------------
