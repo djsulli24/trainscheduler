@@ -6,10 +6,12 @@
         <title>Train Schedule</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Link to Firebase -->
+        <script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>        
         <!-- Link to the jQuery Library -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <!-- Link to the Moment.js library -->
-        <script src="/assets/javascript/moment-with-locales.js"></script>
+        <script src="assets/javascript/moment-with-locales.js"></script>
         <!-- Link to the JS -->
         <script src="assets/javascript/javascript.js"></script>
         <!-- Reset CSS File -->
@@ -73,7 +75,7 @@
                                     <label for="frequency">Frequency (min)</label>
                                     <input type="number" class="form-control" id="frequency" placeholder="15">
                                 </div>
-                                <button type="submit" class="btn btn-default">Submit</button>
+                                <button type="submit" class="btn btn-default" id="submitButton">Submit</button>
                             </form>
                         </div>
                     </div>
