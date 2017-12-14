@@ -53,9 +53,9 @@ var trainSchedule = {
         <tr>
             <td>` + trainObject.name + `</td>
             <td>` + trainObject.destination  + `</td>
-            <td>` + trainObject.firstTrainTime + `</td>
-            <td>` + trainObject.frequency + `</td>
-            <td>Some value</td>
+            <td>` + trainObject.frequency  + `</td>
+            <td>` + this.nextArrival(trainObject.firstTrainTime, trainObject.frequency) + `</td>
+            <td>` + this.minutesAway(trainObject.firstTrainTime, trainObject.frequency) + `</td>
         </tr>
     `);
     },
@@ -67,12 +67,47 @@ var trainSchedule = {
                     <tr>
                         <td>` + value.name + `</td>
                         <td>` + value.destination  + `</td>
-                        <td>` + value.firstTrainTime + `</td>
-                        <td>` + value.frequency + `</td>
-                        <td>Some value</td>
+                        <td>` + value.frequency  + `</td>
+                        <td>` + trainSchedule.nextArrival(value.firstTrainTime, value.frequency) + `</td>
+                        <td>` + trainSchedule.minutesAway(value.firstTrainTime, value.frequency) + `</td>
                     </tr>
                 `);
             });
+        }
+    },
+    nextArrival: function(firstTrainTime, frequency) {
+        // create variable for current time moment (now)
+        // create variable for firstTrainTime moment - time of first train with today's date (firstTime)
+        // IF (firstTime.diff(now) > 0), we are past first time, so nextArrival will be current time + difference % frequency
+        // ELSE, first time hasn't come yet, so nextArrival is firstTime
+        let currentTime = moment();
+        let firstTrain = moment(moment().format('MM/DD/YYYY') + " " + firstTrainTime);
+        let difference = currentTime.diff(firstTrain, 'minutes');
+        console.log("Current Time: " + currentTime.format("LLLL"));
+        console.log("First Train: " + firstTrain.format("LLLL"));
+        if (difference >= 0) {
+            currentTime.add(frequency - (difference%frequency), 'minutes');
+            console.log("Next Arrival: " + currentTime.format('H:mm A'));
+            return currentTime.format('h:mm A');
+        }
+        else {
+            console.log("Next Arrival: " + firstTrain.format('H:mm A'));            
+            return firstTrain.format('h:mm A');
+        }
+    },
+    minutesAway: function(firstTrainTime, frequency) {
+        // create variable for current time moment (now)
+        // create variable for firstTrainTime moment - time of first train with today's date (firstTime)
+        // IF (firstTime.diff(now) > 0), we are past first time, so minutes away will be difference % frequency
+        // ELSE, first time hasn't come yet, so minutes away is absolute value of difference
+        let currentTime = moment();
+        let firstTrain = moment(moment().format('MM/DD/YYYY') + " " + firstTrainTime);
+        let difference = currentTime.diff(firstTrain, 'minutes');
+        if (difference >= 0) {
+            return (frequency - (difference % frequency)) + " minutes";
+        }
+        else {
+            return Math.abs(difference) + " minutes";
         }
     },
 };
