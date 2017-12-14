@@ -117,6 +117,10 @@ var trainSchedule = {
 $("#submitButton").click(function() {
     event.preventDefault();
     trainSchedule.addTrain();
+    $("#trainName").val('')
+    $("#destination").val('')
+    $("#frequency").val('')
+    $("#firstTrainTime").val('')
 });
 
 //-------------ONLOAD FUNCTIONS-------------
@@ -124,6 +128,5 @@ $("#submitButton").click(function() {
 // Initialize the application. If there are trains saved to the db on pageload, they are
 // pulled into the application. Else, an empty array is saved to the database.
 trainSchedule.initializeApp();
-
 
 });
